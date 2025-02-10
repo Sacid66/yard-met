@@ -1,0 +1,201 @@
+/* Genel Arka Plan */
+body {
+    font-family: "Poppins", sans-serif;
+    background: #0D0D0D;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+/* Chat Kapsayıcı - Daha Büyük */
+.chat-container {
+    width: 80px;
+    height: 80px;
+    background: #1A1A1A;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0;
+    animation: expandBox 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+}
+
+/* Kutunun büyüme animasyonu */
+@keyframes expandBox {
+    0% {
+        width: 80px;
+        height: 80px;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.2);
+    }
+    50% {
+        width: 300px;
+        height: 300px;
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(0.6);
+    }
+    100% {
+        width: 800px; /* Daha büyük olacak */
+        height: 700px;
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Oda Başlığı */
+.chat-header {
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    width: fit-content;
+    margin: 12px auto;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in forwards;
+    animation-delay: 1.2s;
+}
+
+/* Mesaj Listesi */
+#messages {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    overflow-x: hidden; /* Yatay scroll engellendi */
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in forwards;
+    animation-delay: 1.4s;
+}
+
+/* Mesaj Gönderme Alanı */
+.input-area {
+    display: flex;
+    padding: 14px;
+    background: #222222;
+    border-radius: 16px;
+    margin: 10px;
+    align-items: center;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in forwards;
+    animation-delay: 1.6s;
+}
+
+/* Input Alanı */
+input {
+    flex-grow: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 16px;
+    outline: none;
+    background: #292929;
+    color: white;
+    font-size: 16px;
+    text-indent: 12px;
+}
+
+/* Gönder Butonu */
+button {
+    padding: 12px 18px;
+    border: none;
+    border-radius: 16px;
+    background: #5865F2;
+    color: white;
+    cursor: pointer;
+    margin-left: 12px;
+    transition: all 0.3s;
+    font-size: 16px;
+}
+
+button:hover {
+    background: #4752C4;
+}
+
+/* Kullanıcı Avatarı */
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #5865F2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 16px;
+    color: white;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+/* Kullanıcı Mesajı */
+.message {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    max-width: 75%;
+    padding: 12px 16px;
+    border-radius: 14px;
+    font-size: 16px;
+    opacity: 0;
+    transform: translateX(20px);
+    animation: messageSlide 0.3s ease-out forwards;
+}
+
+/* Mesaj Gönderme Animasyonu */
+@keyframes messageSlide {
+    0% {
+        opacity: 0;
+        transform: translateX(20px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+/* Kullanıcı mesajı sağda */
+.message.sent {
+    align-self: flex-end;
+    background: #5865F2;
+    border-radius: 14px 14px 0 14px;
+    color: white;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+/* Gelen mesaj solda */
+.message.received {
+    align-self: flex-start;
+    background: #0D0D0D; /* Siyah olacak */
+    border-radius: 14px 14px 14px 0;
+    color: white;
+}
+
+/* Sistem Mesajları */
+.system-message {
+    font-size: 14px;
+    text-align: center;
+    color: #B0B0B0;
+    margin: 10px 0;
+}
+
+/* Fade-in animasyonu */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

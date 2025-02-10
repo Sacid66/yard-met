@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Odası</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">Oda Kodu: <span id="room-code">{{ room_code }}</span></div>
+        <div id="messages"></div>
+        <div class="input-area">
+            <input type="text" id="message-input" placeholder="Mesajınızı yazın...">
+            <button id="send-button">Gönder</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const socket = io();
+            const username = "{{ username }}";
+            const room = "{{ room_code }}";
+            const messagesDiv = document.getElementById("messages");
+            const inputField = document.getElementById("message-input");
+            const sendButton = document.getElementById("send-button");
+    
+            function createAvatar(name) {
+                return name.charAt(0).toUpperCase();
+            }
+    
+            socket.emit("join", { username: username, room: room });
+    
+            function sendMessage() {
+                const message = inputField.value.trim();
+                if (message !== "") {
+                    socket.emit("message", { username: username, message: message, room: room });
+                    inputField.value = "";
+                }
+            }
+    
+            // Enter tuşuna basınca mesaj gönder
+            inputField.addEventListener("keydown", function (event) {
+                if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    sendMessage();
+                }
+            });
+    
+            sendButton.onclick = sendMessage;
+    
+            socket.on("message", function (data) {
+                const messageDiv = document.createElement("div");
+                messageDiv.classList.add("message");
+    
+                if (data.username !== username) {
+                    const avatarDiv = document.createElement("div");
+                    avatarDiv.classList.add("avatar");
+                    avatarDiv.textContent = createAvatar(data.username);
+                    messageDiv.appendChild(avatarDiv);
+                }
+    
+                messageDiv.classList.add(data.username === username ? "sent" : "received");
+                messageDiv.innerHTML += `<div class="message-content">${data.message}</div>`;
+    
+                messagesDiv.appendChild(messageDiv);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            });
+    
+            socket.on("join", function (data) {
+                const systemMessage = document.createElement("div");
+                systemMessage.classList.add("system-message");
+                systemMessage.innerHTML = `<span class="avatar">${createAvatar(data.username)}</span> ${data.username} odaya katıldı!`;
+                messagesDiv.appendChild(systemMessage);
+            });
+    
+            window.onbeforeunload = function () {
+                socket.emit("leave", { username: username, room: room });
+            };
+        });
+    </script>
+    
+    
+</body>
+</html>

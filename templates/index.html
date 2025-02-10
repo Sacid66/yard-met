@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join or Create Room</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bok.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Join Room Form -->
+        <div class="form-wrapper" id="join-room">
+            <h1>Join Room</h1>
+            <form action="/join_room" method="POST">
+                <input type="text" name="username" placeholder="Kullanıcı adınızı girin" required>
+                <input type="text" name="room_code" placeholder="Oda Kodu Gir" required>
+                <button type="submit">Katıl</button>
+            </form>
+            <p class="switch-form" onclick="switchToCreate()">Oda Oluştur →</p>
+        </div>
+
+        <!-- Create Room Form -->
+        <div class="form-wrapper hidden" id="create-room">
+            <h1>Create Room</h1>
+            <form method="POST">
+                <input type="text" name="username" placeholder="Kullanıcı adınızı girin" required>
+                <button type="submit">Oluştur</button>
+            </form>
+            <p class="switch-form" onclick="switchToJoin()">← Geri Dön</p>
+        </div>
+    </div>
+
+    <script>
+        function switchToCreate() {
+            document.getElementById("join-room").classList.add("slide-left");
+            document.getElementById("create-room").classList.add("slide-in");
+        }
+
+        function switchToJoin() {
+            document.getElementById("join-room").classList.remove("slide-left");
+            document.getElementById("create-room").classList.remove("slide-in");
+        }
+    </script>
+</body>
+</html>

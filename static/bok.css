@@ -1,0 +1,99 @@
+/* Genel stil */
+body {
+    font-family: "Poppins", sans-serif;
+    background: #0D0D0D;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+/* Form kapsayıcısı */
+.container {
+    background: #1A1A1A;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    text-align: center;
+    width: 280px; /* Daha dar hale getirildi */
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Formlar */
+.form-wrapper {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    transition: transform 0.4s ease-in-out;
+}
+
+/* İlk başta görünmeyen Create Room */
+.hidden {
+    transform: translateX(100%);
+}
+
+/* Input alanları */
+input {
+    width: 90%;
+    padding: 8px; /* Daha kısa hale getirildi */
+    margin: 8px 0;
+    border: none;
+    border-radius: 8px;
+    background: #222222;
+    color: white;
+    font-size: 13px; /* Daha küçük font */
+    outline: none;
+    text-indent: 8px;
+    transition: all 0.3s;
+}
+
+input:focus {
+    background: #292929;
+}
+
+/* Butonlar */
+button {
+    width: 92%; /* Input kutularıyla daha orantılı */
+    padding: 9px; /* Daha kısa */
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(to right, #333333, #222222);
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.3s;
+}
+
+button:hover {
+    background: linear-gradient(to right, #444444, #333333);
+}
+
+/* Form değiştirme metni */
+.switch-form {
+    color: #9b9b9b;
+    cursor: pointer;
+    font-size: 12px; /* Daha küçük */
+    margin-top: 8px;
+    transition: 0.3s;
+}
+
+.switch-form:hover {
+    color: white;
+}
+
+/* Animasyonlar */
+.slide-left {
+    transform: translateX(-100%);
+}
+
+.slide-in {
+    transform: translateX(0);
+}
