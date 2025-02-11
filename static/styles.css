@@ -44,7 +44,7 @@ body {
         transform: translate(-50%, -50%) scale(0.6);
     }
     100% {
-        width: 800px;
+        width: 800px; /* Daha büyük olacak */
         height: 700px;
         opacity: 1;
         transform: translate(-50%, -50%) scale(1);
@@ -53,28 +53,17 @@ body {
 
 /* Oda Başlığı */
 .chat-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     padding: 14px;
     background: rgba(255, 255, 255, 0.08);
     border-radius: 16px;
     font-size: 18px;
     font-weight: bold;
     text-align: center;
-}
-
-/* Telefon ikonu */
-.call-icon {
-    font-size: 20px;
-    color: #00ff00;
-    cursor: pointer;
-    transition: color 0.3s ease;
-    margin-right: 10px;
-}
-
-.call-icon:hover {
-    color: #00cc00;
+    width: fit-content;
+    margin: 12px auto;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in forwards;
+    animation-delay: 1.2s;
 }
 
 /* Mesaj Listesi */
@@ -82,7 +71,7 @@ body {
     flex-grow: 1;
     padding: 20px;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: hidden; /* Yatay scroll engellendi */
     display: flex;
     flex-direction: column;
     opacity: 0;
@@ -188,7 +177,7 @@ button:hover {
 /* Gelen mesaj solda */
 .message.received {
     align-self: flex-start;
-    background: #0D0D0D;
+    background: #0D0D0D; /* Siyah olacak */
     border-radius: 14px 14px 14px 0;
     color: white;
 }
