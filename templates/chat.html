@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Odası</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="chat-container">
-        <div class="chat-header">Oda Kodu: <span id="room-code">{{ room_code }}</span></div>
+        <div class="chat-header">
+            Oda Kodu: <span id="room-code">{{ room_code }}</span>
+            <i class="fas fa-phone-alt call-icon"></i> <!-- Telefon simgesi -->
+        </div>
         <div id="messages"></div>
         <div class="input-area">
             <input type="text" id="message-input" placeholder="Mesajınızı yazın...">
@@ -25,13 +29,14 @@
             const messagesDiv = document.getElementById("messages");
             const inputField = document.getElementById("message-input");
             const sendButton = document.getElementById("send-button");
-    
+            const callIcon = document.querySelector(".call-icon");
+
             function createAvatar(name) {
                 return name.charAt(0).toUpperCase();
             }
-    
+
             socket.emit("join", { username: username, room: room });
-    
+
             function sendMessage() {
                 const message = inputField.value.trim();
                 if (message !== "") {
@@ -39,48 +44,49 @@
                     inputField.value = "";
                 }
             }
-    
-            // Enter tuşuna basınca mesaj gönder
+
             inputField.addEventListener("keydown", function (event) {
                 if (event.key === "Enter" && !event.shiftKey) {
                     event.preventDefault();
                     sendMessage();
                 }
             });
-    
+
             sendButton.onclick = sendMessage;
-    
+
             socket.on("message", function (data) {
                 const messageDiv = document.createElement("div");
                 messageDiv.classList.add("message");
-    
+
                 if (data.username !== username) {
                     const avatarDiv = document.createElement("div");
                     avatarDiv.classList.add("avatar");
                     avatarDiv.textContent = createAvatar(data.username);
                     messageDiv.appendChild(avatarDiv);
                 }
-    
+
                 messageDiv.classList.add(data.username === username ? "sent" : "received");
                 messageDiv.innerHTML += `<div class="message-content">${data.message}</div>`;
-    
+
                 messagesDiv.appendChild(messageDiv);
                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
             });
-    
+
             socket.on("join", function (data) {
                 const systemMessage = document.createElement("div");
                 systemMessage.classList.add("system-message");
                 systemMessage.innerHTML = `<span class="avatar">${createAvatar(data.username)}</span> ${data.username} odaya katıldı!`;
                 messagesDiv.appendChild(systemMessage);
             });
-    
+
+            callIcon.addEventListener("click", function () {
+                alert("Sesli görüşme başlatılacak!");
+            });
+
             window.onbeforeunload = function () {
                 socket.emit("leave", { username: username, room: room });
             };
         });
     </script>
-    
-    
 </body>
 </html>
