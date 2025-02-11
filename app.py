@@ -4,9 +4,11 @@ import uuid
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "your_secret_key"
-socketio = SocketIO(app, cors_allowed_origins="*")
 
-rooms = {}
+# WebSocket desteğini sağlamak için async_mode ekliyoruz
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="gevent", logger=True, engineio_logger=True)
+
+rooms = {}  # Aktif odaları saklamak için sözlük
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -14,23 +16,22 @@ def home():
         username = request.form.get("username")
         if not username:
             return render_template("index.html", error="Kullanıcı adı boş olamaz!")
-        
-        room_code = str(uuid.uuid4())[:6]  # 6 karakterli oda kodu
+
+        room_code = str(uuid.uuid4())[:6]  # 6 karakterli rastgele oda kodu
         rooms[room_code] = {"members": 0}
         
-        # Yönlendirme direkt URL olarak yapılıyor
-        return redirect(f"/chat/{room_code}/{username}")
-    
+        return redirect(f"/chat/{room_code}/{username}")  # Kullanıcıyı odaya yönlendir
+
     return render_template("index.html")
 
 @app.route("/join_room", methods=["POST"])
 def join_room_view():
     username = request.form.get("username")
     room_code = request.form.get("room_code")
-    
+
     if room_code not in rooms:
         return render_template("index.html", error="Böyle bir oda bulunamadı!")
-    
+
     return redirect(f"/chat/{room_code}/{username}")
 
 @app.route("/chat/<room_code>/<username>")
@@ -44,24 +45,37 @@ def chat(room_code, username):
 def handle_join(data):
     room = data["room"]
     username = data["username"]
+
+    if room not in rooms:
+        rooms[room] = {"members": 0}
+
     join_room(room)
     rooms[room]["members"] += 1
-    
-    send({"username": "Sistem", "message": f"{username} odaya katıldı!"}, to=room)
+
+    # Katılım bildirimi list kutusuna düşsün
+    socketio.emit("user_joined", {"username": username}, room=room)
+    socketio.emit("message", {"username": "Sistem", "message": f"{username} odaya katıldı!"}, room=room)
 
 @socketio.on("message")
 def handle_message(data):
     room = data["room"]
-    send({"username": data["username"], "message": data["message"]}, to=room)
+    print(f"Mesaj alındı: {data['message']} - Gönderen: {data['username']}")  # Hata ayıklama için log
+    socketio.emit("message", {"username": data["username"], "message": data["message"]}, room=room)
 
 @socketio.on("leave")
 def handle_leave(data):
     room = data["room"]
     username = data["username"]
+
     leave_room(room)
     rooms[room]["members"] -= 1
-    
-    send({"username": "Sistem", "message": f"{username} odadan ayrıldı."}, to=room)
+
+    # Oda tamamen boşsa listeden kaldır
+    if rooms[room]["members"] <= 0:
+        del rooms[room]
+
+    socketio.emit("user_left", {"username": username}, room=room)
+    socketio.emit("message", {"username": "Sistem", "message": f"{username} odadan ayrıldı."}, room=room)
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)
