@@ -6,7 +6,9 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "your_secret_key"
 
 # Gevent tabanlı WebSocket desteği sağlamak için async_mode="gevent" ekliyoruz
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode="gevent", logger=True, engineio_logger=True, max_http_buffer_size=50_000_000)
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="gevent",
+                    logger=True, engineio_logger=True,
+                    max_http_buffer_size=50_000_000)
 
 rooms = {}  # Aktif odaları saklamak için sözlük
 
@@ -48,13 +50,19 @@ def handle_join(data):
 
     join_room(room)
     rooms[room]["members"] += 1
-    socketio.emit("user_joined", {"username": username}, room=room)
-    socketio.emit("message", {"username": "Sistem", "message": f"{username} odaya katıldı!"}, room=room)
+    # Sadece sistem mesajı gönderiyoruz
+    socketio.emit("message", {
+        "username": "Sistem",
+        "message": f"{username} odaya katıldı!"
+    }, room=room)
 
 @socketio.on("message")
 def handle_message(data):
     room = data["room"]
-    socketio.emit("message", {"username": data["username"], "message": data["message"]}, room=room)
+    socketio.emit("message", {
+        "username": data["username"],
+        "message": data["message"]
+    }, room=room)
 
 @socketio.on("file")
 def handle_file(data):
@@ -82,8 +90,12 @@ def handle_leave(data):
     rooms[room]["members"] -= 1
     if rooms[room]["members"] <= 0:
         del rooms[room]
-    socketio.emit("user_left", {"username": username}, room=room)
-    socketio.emit("message", {"username": "Sistem", "message": f"{username} odadan ayrıldı."}, room=room)
+
+    # Sadece sistem mesajı gönderiyoruz
+    socketio.emit("message", {
+        "username": "Sistem",
+        "message": f"{username} odadan ayrıldı."
+    }, room=room)
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)
