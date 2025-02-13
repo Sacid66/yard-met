@@ -11,7 +11,7 @@ body {
     overflow: hidden;
 }
 
-/* Chat Kapsayıcı - Daha Büyük */
+/* Chat Kapsayıcı */
 .chat-container {
     width: 80px;
     height: 80px;
@@ -44,7 +44,7 @@ body {
         transform: translate(-50%, -50%) scale(0.6);
     }
     100% {
-        width: 800px; /* Daha büyük olacak */
+        width: 800px;
         height: 700px;
         opacity: 1;
         transform: translate(-50%, -50%) scale(1);
@@ -63,7 +63,7 @@ body {
     margin: 12px auto;
     opacity: 0;
     animation: fadeIn 0.5s ease-in forwards;
-    animation-delay: 1.2s;
+    animation-delay: 1.6s;
 }
 
 /* Mesaj Listesi */
@@ -71,54 +71,114 @@ body {
     flex-grow: 1;
     padding: 20px;
     overflow-y: auto;
-    overflow-x: hidden; /* Yatay scroll engellendi */
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     opacity: 0;
     animation: fadeIn 0.5s ease-in forwards;
-    animation-delay: 1.4s;
+    animation-delay: 1.8s;
+}
+
+/* Scrollbar */
+#messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+#messages::-webkit-scrollbar-track {
+    background: #1A1A1A;
+    border-radius: 10px;
+}
+
+#messages::-webkit-scrollbar-thumb {
+    background: #3A3A3A;
+    border-radius: 10px;
+}
+
+#messages::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Medya Önizleme Alanı */
+#media-preview {
+    display: none;
+    width: 100%;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+#media-preview img, #media-preview video, #media-preview audio {
+    max-width: 150px;
+    max-height: 100px;
+    border-radius: 8px;
 }
 
 /* Mesaj Gönderme Alanı */
 .input-area {
     display: flex;
-    padding: 14px;
+    align-items: center;
+    padding: 10px;
     background: #222222;
     border-radius: 16px;
     margin: 10px;
-    align-items: center;
+    position: relative;
     opacity: 0;
     animation: fadeIn 0.5s ease-in forwards;
-    animation-delay: 1.6s;
+    animation-delay: 1.9s;
 }
 
-/* Input Alanı */
-input {
+/* Input Container */
+.input-container {
+    position: relative;
     flex-grow: 1;
-    padding: 14px;
+    display: flex;
+    align-items: center;
+}
+
+/* Mesaj Yazma Alanı */
+#message-input {
+    width: 100%;
+    padding: 14px 55px 14px 14px; /* Sağda daha fazla boşluk */
     border: none;
     border-radius: 16px;
     outline: none;
     background: #292929;
     color: white;
     font-size: 16px;
-    text-indent: 12px;
 }
 
-/* Gönder Butonu */
-button {
-    padding: 12px 18px;
+/* Galeri İkonu (📷) - INPUT'UN EN SAĞINA SABİT */
+#file-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #B0B0B0;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+#file-button:hover {
+    color: white;
+}
+
+/* GÖNDER BUTONU */
+#send-button {
+    padding: 14px 25px;
     border: none;
     border-radius: 16px;
     background: #5865F2;
     color: white;
     cursor: pointer;
-    margin-left: 12px;
     transition: all 0.3s;
-    font-size: 16px;
+    margin-left: 10px;
 }
 
-button:hover {
+#send-button:hover {
     background: #4752C4;
 }
 
@@ -177,7 +237,7 @@ button:hover {
 /* Gelen mesaj solda */
 .message.received {
     align-self: flex-start;
-    background: #0D0D0D; /* Siyah olacak */
+    background: #0D0D0D;
     border-radius: 14px 14px 14px 0;
     color: white;
 }
@@ -189,6 +249,67 @@ button:hover {
     color: #B0B0B0;
     margin: 10px 0;
 }
+
+/* Medya Mesajları */
+.chat-media {
+    max-width: 200px;
+    max-height: 150px;
+    border-radius: 10px;
+    margin-top: 5px;
+}
+
+/* Yazıyor animasyonu (3 nokta) */
+.typing-dots {
+    display: inline-block;
+    vertical-align: middle;
+}
+.typing-dots span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin: 0 3px;
+    background: #ccc;
+    border-radius: 50%;
+    animation: wave 1.2s infinite ease-in-out;
+}
+.typing-dots span:nth-child(1) {
+    animation-delay: 0s;
+}
+.typing-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+.typing-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+@keyframes wave {
+    0%, 60%, 100% {
+      transform: translateY(0);
+    }
+    30% {
+      transform: translateY(-10px);
+    }
+}
+
+/* Typing balonunun yumuşakça görünmesi/kaybolması */
+#typing-indicator {
+    animation: none !important;     /* .message'den gelen animasyonu yok say */
+    transform: none !important;     /* .message'den gelen translateX vb. yok say */
+    transition: opacity 0.4s ease;  /* typing-visible/typing-hidden geçişi */
+  }
+
+/* Başta gizli (opacity:0) */
+.typing-hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Görünür (opacity:1) */
+.typing-visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+
 
 /* Fade-in animasyonu */
 @keyframes fadeIn {
