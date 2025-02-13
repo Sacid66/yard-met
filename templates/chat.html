@@ -9,15 +9,14 @@
 </head>
 <body>
   <div class="chat-container">
-    <div class="chat-header">
-      Oda Kodu: <span id="room-code">{{ room_code }}</span>
-    </div>
+    <div class="chat-header">Oda Kodu: <span id="room-code">{{ room_code }}</span></div>
     
     <!-- Mesajlar listesi -->
     <div id="messages"></div>
 
     <!-- YAZIYOR ANİMASYONU (typing indicator), BAŞTA GİZLİ -->
     <div id="typing-indicator" class="message received typing-hidden">
+      <!-- Avatar boş başlayacak, typing gelince doldurulacak -->
       <div class="avatar" id="typing-user-avatar"></div>
       <div class="message-content">
         <div class="typing-dots">
@@ -144,7 +143,7 @@
         }
       }
 
-      // Enter veya Send butonu
+      // Enter veya Send
       inputField.addEventListener("keydown", function(event) {
         if (event.key === "Enter" && !event.shiftKey) {
           event.preventDefault();
@@ -153,7 +152,7 @@
       });
       sendButton.onclick = sendMessage;
 
-      // Dosya butonu
+      // Fotoğraf butonu
       fileButton.onclick = function() {
         fileInput.click();
       };
@@ -182,7 +181,7 @@
         }
       };
 
-      // Yazıyor bilgisi
+      // "typing" -> balonu yumuşakça göster
       socket.on("typing", function(data) {
         if (data.username === username) return;
         typingUserAvatar.textContent = data.username.charAt(0).toUpperCase();
@@ -191,6 +190,7 @@
         typingIndicator.classList.add("typing-visible");
       });
 
+      // "stop_typing" -> balonu yumuşakça gizle
       socket.on("stop_typing", function(data) {
         if (data.username === username) return;
         typingIndicator.classList.remove("typing-visible");
@@ -201,15 +201,11 @@
       socket.on("message", function(data) {
         // Eğer mesajı gönderen kullanıcı sizseniz tekrar göstermeyin
         if (data.username === username) return;
-
         const messageDiv = document.createElement("div");
         messageDiv.classList.add("message", "received");
-
-        // "Sistem" değilse avatar göster
         if (data.username !== "Sistem") {
           messageDiv.innerHTML = createAvatar(data.username);
         }
-
         messageDiv.innerHTML += `<div class="message-content">${data.message}</div>`;
         appendToMessages(messageDiv);
       });
@@ -219,11 +215,9 @@
         if (data.username === username) return;
         const fileDiv = document.createElement("div");
         fileDiv.classList.add("message", "received");
-
         if (data.username !== "Sistem") {
           fileDiv.innerHTML = createAvatar(data.username);
         }
-
         let content = "";
         if (data.fileType.startsWith("image/")) {
           content = `<img src="${data.fileData}" alt="Görsel" class="chat-media">`;
@@ -238,7 +232,25 @@
         appendToMessages(fileDiv);
       });
 
-      // Sayfa kapanırken odadan ayrıl
+      // Yeni kullanıcı odaya katıldığında
+      socket.on("user_joined", function(data) {
+        const systemMessage = document.createElement("div");
+        systemMessage.classList.add("message", "received");
+        systemMessage.innerHTML = createAvatar(data.username) +
+          `<div class="message-content">${data.username} odaya katıldı!</div>`;
+        appendToMessages(systemMessage);
+      });
+
+      // Bir kullanıcı odadan ayrıldığında
+      socket.on("user_left", function(data) {
+        const systemMessage = document.createElement("div");
+        systemMessage.classList.add("message", "received");
+        systemMessage.innerHTML = createAvatar(data.username) +
+          `<div class="message-content">${data.username} odadan ayrıldı.</div>`;
+        appendToMessages(systemMessage);
+      });
+
+      // Pencere kapanırken odadan ayrıl
       window.addEventListener("beforeunload", function() {
         socket.emit("leave", { username, room });
       });
