@@ -12,21 +12,21 @@
         <div class="form-wrapper" id="join-room">
             <h1>Join Room</h1>
             <form action="/join_room" method="POST">
-                <input type="text" name="username" placeholder="Kullanıcı adınızı girin" required>
-                <input type="text" name="room_code" placeholder="Oda Kodu Gir" required>
-                <button type="submit">Katıl</button>
+                <input type="text" name="username" placeholder="Enter Your Username" required>
+                <input type="text" name="room_code" placeholder="Enter Your Room Code" required>
+                <button type="submit">Join</button>
             </form>
-            <p class="switch-form" onclick="switchToCreate()">Oda Oluştur →</p>
+            <p class="switch-form" onclick="switchToCreate()">Create Room →</p>
         </div>
 
         <!-- Create Room Form -->
         <div class="form-wrapper hidden" id="create-room">
             <h1>Create Room</h1>
             <form method="POST">
-                <input type="text" name="username" placeholder="Kullanıcı adınızı girin" required>
-                <button type="submit">Oluştur</button>
+                <input type="text" name="username" placeholder="Enter Your Username" required>
+                <button type="submit">Create</button>
             </form>
-            <p class="switch-form" onclick="switchToJoin()">← Geri Dön</p>
+            <p class="switch-form" onclick="switchToJoin()">← Come Back</p>
         </div>
     </div>
 
