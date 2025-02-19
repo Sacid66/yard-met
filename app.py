@@ -9,7 +9,7 @@ socketio = SocketIO(app, cors_allowed_origins="*", async_mode="gevent",
                     logger=True, engineio_logger=True,
                     max_http_buffer_size=50_000_000)
 
-rooms = {}  # Aktif odaları saklamak için sözlük
+rooms = {}  
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -50,11 +50,10 @@ def handle_join(data):
     join_room(room)
     rooms[room]["members"] += 1
 
-    # YALNIZCA 'user_joined' EVENT'İ
+  
     socketio.emit("user_joined", {"username": username}, room=room)
 
-    # AŞAĞIDAKİ 'Sistem' MESAJINI SİLDİK
-    # socketio.emit("message", {"username": "Sistem", "message": f"{username} odaya katıldı!"}, room=room)
+
 
 @socketio.on("message")
 def handle_message(data):
@@ -91,11 +90,10 @@ def handle_leave(data):
     if rooms[room]["members"] <= 0:
         del rooms[room]
 
-    # YALNIZCA 'user_left' EVENT'İ
+    
     socketio.emit("user_left", {"username": username}, room=room)
 
-    # AŞAĞIDAKİ 'Sistem' MESAJINI SİLDİK
-    # socketio.emit("message", {"username": "Sistem", "message": f"{username} odadan ayrıldı."}, room=room)
+   
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)
