@@ -1,4 +1,4 @@
-/* Genel Arka Plan */
+
 body {
     font-family: "Poppins", sans-serif;
     background: #0D0D0D;
@@ -11,7 +11,7 @@ body {
     overflow: hidden;
 }
 
-/* Chat Kapsayıcı */
+
 .chat-container {
     width: 80px;
     height: 80px;
@@ -29,7 +29,7 @@ body {
     animation: expandBox 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
 }
 
-/* Kutunun büyüme animasyonu */
+
 @keyframes expandBox {
     0% {
         width: 80px;
@@ -51,7 +51,7 @@ body {
     }
 }
 
-/* Oda Başlığı */
+
 .chat-header {
     padding: 14px;
     background: rgba(255, 255, 255, 0.08);
@@ -66,7 +66,7 @@ body {
     animation-delay: 1.6s;
 }
 
-/* Mesaj Listesi */
+
 #messages {
     flex-grow: 1;
     padding: 20px;
@@ -79,7 +79,7 @@ body {
     animation-delay: 1.8s;
 }
 
-/* Scrollbar */
+
 #messages::-webkit-scrollbar {
     width: 8px;
 }
@@ -98,7 +98,7 @@ body {
     background: #555;
 }
 
-/* Medya Önizleme Alanı */
+
 #media-preview {
     display: none;
     width: 100%;
@@ -115,7 +115,7 @@ body {
     border-radius: 8px;
 }
 
-/* Mesaj Gönderme Alanı */
+
 .input-area {
     display: flex;
     align-items: center;
@@ -129,7 +129,7 @@ body {
     animation-delay: 1.9s;
 }
 
-/* Input Container */
+
 .input-container {
     position: relative;
     flex-grow: 1;
@@ -137,10 +137,10 @@ body {
     align-items: center;
 }
 
-/* Mesaj Yazma Alanı */
+
 #message-input {
     width: 100%;
-    padding: 14px 55px 14px 14px; /* Sağda daha fazla boşluk */
+    padding: 14px 55px 14px 14px; 
     border: none;
     border-radius: 16px;
     outline: none;
@@ -149,7 +149,7 @@ body {
     font-size: 16px;
 }
 
-/* Galeri İkonu (📷) - INPUT'UN EN SAĞINA SABİT */
+
 #file-button {
     position: absolute;
     right: 10px;
@@ -166,7 +166,7 @@ body {
     color: white;
 }
 
-/* GÖNDER BUTONU */
+
 #send-button {
     padding: 14px 25px;
     border: none;
@@ -182,7 +182,7 @@ body {
     background: #4752C4;
 }
 
-/* Kullanıcı Avatarı */
+
 .avatar {
     width: 40px;
     height: 40px;
@@ -198,7 +198,7 @@ body {
     flex-shrink: 0;
 }
 
-/* Kullanıcı Mesajı */
+
 .message {
     display: flex;
     align-items: center;
@@ -212,7 +212,7 @@ body {
     animation: messageSlide 0.3s ease-out forwards;
 }
 
-/* Mesaj Gönderme Animasyonu */
+
 @keyframes messageSlide {
     0% {
         opacity: 0;
@@ -224,7 +224,7 @@ body {
     }
 }
 
-/* Kullanıcı mesajı sağda */
+
 .message.sent {
     align-self: flex-end;
     background: #5865F2;
@@ -234,7 +234,7 @@ body {
     flex-direction: row-reverse;
 }
 
-/* Gelen mesaj solda */
+
 .message.received {
     align-self: flex-start;
     background: #0D0D0D;
@@ -242,7 +242,7 @@ body {
     color: white;
 }
 
-/* Sistem Mesajları */
+
 .system-message {
     font-size: 14px;
     text-align: center;
@@ -250,7 +250,7 @@ body {
     margin: 10px 0;
 }
 
-/* Medya Mesajları */
+
 .chat-media {
     max-width: 200px;
     max-height: 150px;
@@ -258,7 +258,7 @@ body {
     margin-top: 5px;
 }
 
-/* Yazıyor animasyonu (3 nokta) */
+
 .typing-dots {
     display: inline-block;
     vertical-align: middle;
@@ -290,20 +290,20 @@ body {
     }
 }
 
-/* Typing balonunun yumuşakça görünmesi/kaybolması */
+
 #typing-indicator {
-    animation: none !important;     /* .message'den gelen animasyonu yok say */
-    transform: none !important;     /* .message'den gelen translateX vb. yok say */
-    transition: opacity 0.4s ease;  /* typing-visible/typing-hidden geçişi */
+    animation: none !important;    
+    transform: none !important;     
+    transition: opacity 0.4s ease;  
   }
 
-/* Başta gizli (opacity:0) */
+
 .typing-hidden {
     opacity: 0;
     pointer-events: none;
 }
 
-/* Görünür (opacity:1) */
+
 .typing-visible {
     opacity: 1;
     pointer-events: auto;
@@ -311,7 +311,7 @@ body {
 
 
 
-/* Fade-in animasyonu */
+
 @keyframes fadeIn {
     from {
         opacity: 0;
